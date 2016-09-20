@@ -39,6 +39,12 @@ namespace dir_date
                     if (u > t)
                         t = u;
                 }
+                foreach (string entry in Directory.GetFiles(path))
+                {
+                    var u = time(entry);
+                    if (u > t)
+                        t = u;
+                }
             }
             times.Add(path, t);
             return t;
@@ -97,10 +103,7 @@ namespace dir_date
                     files.Add(file);
             files.Sort((a, b) => time(a).CompareTo(time(b)));
             foreach (var file in files)
-            {
-                var info = new FileInfo(file);
-                Console.WriteLine("{0}  {1}", info.LastWriteTime, file);
-            }
+                Console.WriteLine("{0}  {1}", time(file), file);
             return 0;
         }
     }

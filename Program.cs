@@ -20,6 +20,30 @@ namespace dir_date
             Console.WriteLine("https://github.com/mganss/Glob.cs");
         }
 
+        static Dictionary<string, DateTime> times = new Dictionary<string, DateTime>();
+
+        static DateTime time(string path)
+        {
+            DateTime t;
+            if (times.TryGetValue(path, out t))
+                return t;
+            var info = new FileInfo(path);
+            if ((info.Attributes & FileAttributes.Directory) == 0)
+                t = info.LastWriteTime;
+            else
+            {
+                t = DateTime.MinValue;
+                foreach (string entry in Directory.GetDirectories(path))
+                {
+                    var u = time(entry);
+                    if (u > t)
+                        t = u;
+                }
+            }
+            times.Add(path, t);
+            return t;
+        }
+
         static int Main(string[] args)
         {
             var options = true;
@@ -67,12 +91,16 @@ namespace dir_date
             }
             if (patterns.Count == 0)
                 patterns.Add("*");
-            var files = new List<FileSystemInfo>();
+            var files = new List<string>();
             foreach (var pattern in patterns)
-                foreach (var file in Glob.Glob.Expand(pattern))
+                foreach (var file in Glob.Glob.ExpandNames(pattern))
                     files.Add(file);
+            files.Sort((a, b) => time(a).CompareTo(time(b)));
             foreach (var file in files)
-                Console.WriteLine("{0}  {1}", file.LastWriteTime, file.FullName);
+            {
+                var info = new FileInfo(file);
+                Console.WriteLine("{0}  {1}", info.LastWriteTime, file);
+            }
             return 0;
         }
     }

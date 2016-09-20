@@ -14,7 +14,7 @@ namespace dir_date
         {
             Console.WriteLine("Directory listing by date of contained files");
             Console.WriteLine("");
-            Console.WriteLine("dir-date [pattern]");
+            Console.WriteLine("dir-date [patterns]");
             Console.WriteLine("");
             Console.WriteLine("Patterns as in:");
             Console.WriteLine("https://github.com/mganss/Glob.cs");
@@ -23,13 +23,13 @@ namespace dir_date
         static int Main(string[] args)
         {
             var options = true;
-            var files = new List<string>();
+            var patterns = new List<string>();
             foreach (var arg in args)
             {
                 var s = arg;
                 if (!options)
                 {
-                    files.Add(s);
+                    patterns.Add(s);
                     continue;
                 }
                 if (s == "")
@@ -43,7 +43,7 @@ namespace dir_date
                     s = "-" + s.Substring(1);
                 if (s[0] != '-')
                 {
-                    files.Add(s);
+                    patterns.Add(s);
                     continue;
                 }
                 if (s.StartsWith("--"))
@@ -65,6 +65,14 @@ namespace dir_date
                         return 1;
                 }
             }
+            if (patterns.Count == 0)
+                patterns.Add("*");
+            var files = new List<FileSystemInfo>();
+            foreach (var pattern in patterns)
+                foreach (var file in Glob.Glob.Expand(pattern))
+                    files.Add(file);
+            foreach (var file in files)
+                Console.WriteLine("{0}  {1}", file.LastWriteTime, file.FullName);
             return 0;
         }
     }

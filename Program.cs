@@ -1,5 +1,6 @@
 internal class Program {
 	static readonly List<Item> items = new();
+	static bool all;
 
 	static void Main(string[] args) {
 		var options = true;
@@ -15,6 +16,10 @@ internal class Program {
 					while (s.StartsWith('-'))
 						s = s[1..];
 					switch (s) {
+					case "a":
+					case "all":
+						all = true;
+						break;
 					case "?":
 					case "h":
 					case "help":
@@ -31,6 +36,7 @@ internal class Program {
 						break;
 					}
 				}
+				continue;
 			}
 			paths.Add(s);
 		}
@@ -65,12 +71,15 @@ internal class Program {
 		Console.WriteLine();
 		Console.WriteLine("-h  Show help");
 		Console.WriteLine("-V  Show version");
+		Console.WriteLine("-a  Don't ignore names beginning with dot");
 	}
 
 	static void Do(string path) {
 		if (Directory.Exists(path))
-			foreach (var entry in Directory.GetFileSystemEntries(path))
-				Do(entry);
+			foreach (var entry in Directory.GetFileSystemEntries(path)) {
+				if (all || !Path.GetFileName(entry).StartsWith('.'))
+					Do(entry);
+			}
 		else
 			items.Add(new Item(path));
 	}

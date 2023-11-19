@@ -42,8 +42,22 @@ internal class Program {
 
 		items.Sort();
 
-		foreach (var item in items)
-			Console.WriteLine($"{item.WriteTime}\t{item.Size}\t{item.Name}");
+		var now = DateTime.Now;
+		foreach (var item in items) {
+			var age = now - item.WriteTime;
+			if (age < TimeSpan.FromDays(1))
+				Console.ForegroundColor = ConsoleColor.Yellow;
+			else if (age < TimeSpan.FromDays(7))
+				Console.ForegroundColor = ConsoleColor.Green;
+			else if (age < TimeSpan.FromDays(365))
+				Console.ForegroundColor = ConsoleColor.Cyan;
+			else
+				Console.ForegroundColor = ConsoleColor.Blue;
+			Console.Write(item.WriteTime);
+
+			Console.ResetColor();
+			Console.WriteLine($"\t{item.Size}\t{item.Name}");
+		}
 	}
 
 	static void Help() {

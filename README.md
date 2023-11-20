@@ -6,5 +6,8 @@ The timestamp column is color-coded:
 |---|---|
 |Blue|Older than a year|
 |Cyan|In the last year|
+|Green|In the last week|
+|Yellow|In the last day|
+|Red|In the last hour|
 
 By default, skips names beginning with `.` (unless they were explicitly specified on the command line). The `-a` option overrides this.

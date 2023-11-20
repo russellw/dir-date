@@ -2,6 +2,8 @@ List files by timestamp, regardless of directory depth, i.e. all files in the cu
 
 The timestamp column is color-coded:
 
+|Color|Age|
+|---|---|
 |Blue|Older than a year|
 |Cyan|In the last year|
 

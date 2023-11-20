@@ -51,7 +51,9 @@ internal class Program {
 		var now = DateTime.Now;
 		foreach (var item in items) {
 			var age = now - item.WriteTime;
-			if (age < TimeSpan.FromDays(1))
+			if (age < TimeSpan.FromHours(1))
+				Console.ForegroundColor = ConsoleColor.Red;
+			else if (age < TimeSpan.FromDays(1))
 				Console.ForegroundColor = ConsoleColor.Yellow;
 			else if (age < TimeSpan.FromDays(7))
 				Console.ForegroundColor = ConsoleColor.Green;

@@ -100,8 +100,16 @@ class Item: IComparable<Item> {
 	}
 
 	public int CompareTo(Item? other) {
+		// Default sort algorithm is unstable:
+		// https://stackoverflow.com/questions/148074/is-the-sorting-algorithm-used-by-nets-array-sort-method-a-stable-algorithm
+		// Could use a stable sort algorithm
+		// to keep same-age files in the order given by the operating system
+		// but it is arguably clearer to break ties by name
 		if (other == null)
 			return 1;
-		return WriteTime.CompareTo(other.WriteTime);
+		var c = WriteTime.CompareTo(other.WriteTime);
+		if (c != 0)
+			return c;
+		return Name.CompareTo(other.Name);
 	}
 }

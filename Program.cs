@@ -77,13 +77,17 @@ internal class Program {
 	}
 
 	static void Do(string path) {
-		if (Directory.Exists(path))
-			foreach (var entry in Directory.GetFileSystemEntries(path)) {
-				if (all || !Path.GetFileName(entry).StartsWith('.'))
-					Do(entry);
-			}
-		else
-			items.Add(new Item(path));
+		try {
+			if (Directory.Exists(path))
+				foreach (var entry in Directory.GetFileSystemEntries(path)) {
+					if (all || !Path.GetFileName(entry).StartsWith('.'))
+						Do(entry);
+				}
+			else
+				items.Add(new Item(path));
+		} catch (UnauthorizedAccessException e) {
+			Console.WriteLine(e.Message);
+		}
 	}
 }
 
